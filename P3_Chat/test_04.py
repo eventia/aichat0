@@ -1,6 +1,5 @@
 # test_04.py
-# python.exe -m uvicorn test_03:app --reload
-# uvicorn test_03:app --reload
+# uvicorn test_04:app --reload
 
 from typing import List
 from fastapi import FastAPI
@@ -23,10 +22,11 @@ class Message(BaseModel):
     content: str
 
 class Messages(BaseModel):
-    msg: List[Message]  # [{"role": "user", "content": "blahblahblah"}, {"role": "assistant", "content": "blahblahblah"}, ...]
+    messages: List[Message]  # [{"role": "user", "content": "blahblahblah"}, {"role": "assistant", "content": "blahblahblah"}, ...]
 
-@app.post("/mchat", response_model=Message)
+@app.post("/chat", response_model=Message)
 def post_chat(request_body: Messages):
-    message_list  = request_body.dict()
-    assistant_turn = chat(chat_message=message_list['msg'])
+    message_list  = request_body.model_dump()
+    # message_list  = request_body.dict()
+    assistant_turn = chat(chat_message=message_list['messages'])
     return assistant_turn
